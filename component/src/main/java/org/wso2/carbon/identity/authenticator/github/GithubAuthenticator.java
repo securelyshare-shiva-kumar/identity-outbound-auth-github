@@ -68,6 +68,7 @@ import static org.wso2.carbon.identity.authenticator.github.GithubAuthenticatorC
  */
 public class GithubAuthenticator extends OpenIDConnectAuthenticator implements FederatedApplicationAuthenticator {
 
+    private static final long serialVersionUID = 7875237246437298886L;
     private static final Log log = LogFactory.getLog(GithubAuthenticator.class);
 
     /**
