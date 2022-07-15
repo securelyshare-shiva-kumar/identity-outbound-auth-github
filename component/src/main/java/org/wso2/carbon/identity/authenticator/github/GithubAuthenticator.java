@@ -197,12 +197,13 @@ public class GithubAuthenticator extends OpenIDConnectAuthenticator implements F
                 throw new AuthenticationFailedException("Access token is empty or null");
             }
 
+            Map<String, Object> tokenResponse = JSONUtils.parseJSON(token);
             AuthenticatedUser authenticatedUserObj;
             Map<ClaimMapping, String> claims;
             authenticatedUserObj = AuthenticatedUser
-                    .createFederateAuthenticatedUserFromSubjectIdentifier(JSONUtils.parseJSON(token)
-                            .get(GithubAuthenticatorConstants.USER_ID).toString());
-            authenticatedUserObj.setAuthenticatedSubjectIdentifier(JSONUtils.parseJSON(token)
+                    .createFederateAuthenticatedUserFromSubjectIdentifier(
+                        tokenResponse.get(GithubAuthenticatorConstants.USER_ID).toString());
+            authenticatedUserObj.setAuthenticatedSubjectIdentifier(tokenResponse
                     .get(GithubAuthenticatorConstants.USER_ID).toString());
             claims = getSubjectAttributes(oAuthResponse, authenticatorProperties);
 
@@ -222,6 +223,9 @@ public class GithubAuthenticator extends OpenIDConnectAuthenticator implements F
                         for (Map.Entry<ClaimMapping, String> userAttribute : claims.entrySet()) {
                             if (USER_EMAIL.equals(userAttribute.getKey().getRemoteClaim().getClaimUri())) {
                                 userAttribute.setValue(primaryEmail);
+                                authenticatedUserObj = AuthenticatedUser
+                                                .createFederateAuthenticatedUserFromSubjectIdentifier(primaryEmail);
+                                        authenticatedUserObj.setAuthenticatedSubjectIdentifier(primaryEmail);
                             }
                         }
                     }
